@@ -1,6 +1,6 @@
 file_lines = []
 words = []
-punct_marks = ';:—.,!?1234567890[]()"“”\n'
+punct_marks = '$_;:—.,!?1234567890[]()"“”\n'
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
@@ -59,9 +59,8 @@ def alpha_sort(list):
                 flag = 1
     return list
 
+
 # TODO: Use another base sorting algorithm (probably heap sort)
-# TODO: Fix a bug where word 'xl' disappears from a print
-# TODO: Fix some strange characters appearing in Poe's novel
 # Main program
 def main():
     print('a: Song')
@@ -81,7 +80,7 @@ def main():
         else:
             print('Invalid input. Please, try again')
 
-    with open(file_to_open) as data:
+    with open(file_to_open, encoding='UTF-8') as data:
         for line in data:
             if line != '\n':
                 file_lines.append(del_marks(line.lower()))
@@ -97,28 +96,25 @@ def main():
     print(f'Text divided into separate words and sorted: {words}')
 
     # Beautifully printing a dictionary from a sorted list
-    letter_changed = True
-    current_letter = words[0][:1]
-    current_word = words[0]
-    same_words_count = 0
+    current_letter = ''
+    current_word = ''
+    same_word_count = 1
     for i in range(len(words)):
-        if current_word != words[i]:
-            if same_words_count > 1:
-                print(f'{current_word}({same_words_count})', end=' ')
-            else:
-                print(f'{current_word}', end=' ')
-            same_words_count = 0
-            current_word = words[i]
+
+        if words[i] != current_word and same_word_count > 1:
+            print(f'({same_word_count})', end='')
+
         if words[i][:1] != current_letter:
-            letter_changed = True
             print()
-        if letter_changed:
             current_letter = words[i][:1]
-            print(f'{current_letter.capitalize()}:', end=' ')
-        if words[i] == current_word:
-            same_words_count += 1
-        # print(words[i], end=' ')
-        letter_changed = False
+            print(f'{current_letter.capitalize()}:', end='')
+
+        if words[i] != current_word:
+            current_word = words[i]
+            print(f' {current_word}', end='')
+            same_word_count = 1
+        else:
+            same_word_count += 1
 
 
 if __name__ == '__main__':
